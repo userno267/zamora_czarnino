@@ -90,7 +90,7 @@ $config['base_url'] 				= '';
 | variable to blank.
 |
 */
-$config['https://zamora-czarnino.onrender.com']               = 'index.php';
+$config['index_page']               = 'index.php';
 
 /*
 |--------------------------------------------------------------------------
