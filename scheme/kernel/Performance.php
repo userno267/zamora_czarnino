@@ -34,40 +34,65 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+/**
+* ------------------------------------------------------
+*  Class Performance
+* ------------------------------------------------------
+ */
+class Performance {
+	public function __construct() {
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+    }
+	/**
+	 * Holds the mark points
+	 *
+	 * @var array
+	 */
+	public $tags = array();
 
+	/**
+	 * Start Marking Points
+	 *
+	 * @param  string $point marker
+	 * @return void
+	 */
+	public function start($point)
+	{
+		$this->tags[$point]['start'] = microtime(true);
+	}
+
+	/**
+	 * End Marking Point
+	 *
+	 * @param string $point
+	 * @return void
+	 */
+	public function stop($point) {
+		$this->tags[$point]['stop'] = microtime(true);
+	}
+
+	/**
+	 * Elapsed Time
+	 *
+	 * @param  string  $point    marker
+	 * @param  integer $decimals
+	 * @return float
+	 */
+	public function elapsed_time($point, $decimals = 4)
+	{
+		$split_time = $this->tags[$point]['stop'] - $this->tags[$point]['start'];
+		return number_format($split_time, $decimals);
+	}
+
+	/**
+	 * Memory Usage
+	 *
+	 * @return float
+	 */
+	public function memory_usage()
+    {
+        return round(memory_get_usage() / 1024 / 1024, 2).'MB';
+    }
+
+}
 ?>

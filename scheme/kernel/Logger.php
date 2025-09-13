@@ -29,45 +29,50 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  *
  * @package LavaLust
  * @author Ronald M. Marasigan <ronald.marasigan@yahoo.com>
- * @since Version 1
+ * @since Version 4
  * @link https://github.com/ronmarasigan/LavaLust
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+/**
+* ------------------------------------------------------
+*  Class Logger
+* ------------------------------------------------------
+ */
+class Logger {
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+    /**
+     * log error etc
+     *
+     * @param string $type | debug, error
+     * @param string $header
+     * @param string $message
+     * @param string $filename
+     * @param string $linenum
+     * @return void
+     */
+    public function log($type = '', $header = '', $message = '', $filename = '', $linenum = '')
+    {
+        $logfile = config_item('log_dir').'log.txt';
+        if (! file_exists($logfile)) { 
+            mkdir(config_item('log_dir'), 0777, true);
+            $fh = fopen($logfile, 'w');
+            fclose($fh);
+        } 
 
-?>
+        $date = date("d/m/Y G:i:s");
+
+        if($type == 'debug' && (config_item('log_threshold') == 2 || config_item('log_threshold') == 3))
+        {
+            $err = "Date: ".$date."\n"."Debug Message: ".$header;
+            $err .= "\n------------------------------------------------------------------\n\n";
+            error_log($err, 3, $logfile);
+        } else if($type == 'error' && (config_item('log_threshold') == 1 || config_item('log_threshold') == 3))
+        {
+            $message = is_array($message)? implode("\n", $message): $message;
+            $err = "Date: ".$date."\n"."Exception Class: ".$header."\n"."Error Message: ".$message."\n"."Filename: ".$filename."\n"."Line Number: ".$linenum;
+            $err .= "\n------------------------------------------------------------------\n\n";
+            error_log($err, 3, $logfile);
+        }  
+    }
+ }

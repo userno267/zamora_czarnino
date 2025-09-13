@@ -79,7 +79,7 @@ $config['ENVIRONMENT']             = 'development';
 | WARNING: You MUST set this value!
 |
 */
-$config['base_url'] 				= 'https://zamora-czarnino.onrender.com/';
+$config['base_url'] 				= '';
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ $config['log_dir']                  = 'runtime/logs/';
 | Note: This will NOT disable or override the LavaLust-specific
 |	autoloading (app/config/autoload.php)
 */
-$config['composer_autoload']        = 'C:\wamp64\www\crudonline\zamora_czarnino\vendor\autoload.php';
+$config['composer_autoload']        = FALSE;
 
 /*
 |--------------------------------------------------------------------------

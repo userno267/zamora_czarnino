@@ -34,40 +34,92 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+/**
+* ------------------------------------------------------
+*  Class Controller
+* ------------------------------------------------------
+ */
+class Controller
+{
+	/**
+	 * Controller Instance
+	 *
+	 * @var object
+	 */
+	private static $instance;
+	/**
+	 * Load class
+	 *
+	 * @var object
+	 */
+	public $call;
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+	/**
+	 * Dynamic Properties using __set and __get
+	 *
+	 * @var array
+	 */
+	public $properties = [];
+
+	/**
+	 * Set Dynamic Properties
+	 *
+	 * @param string $prop
+	 * @param string $val
+	 */
+	public function __set($prop, $val) {
+		$this->properties[$prop] = $val;
+	}
+
+	/**
+	 * Get Dynamic Properties
+	 *
+	 * @param string $prop
+	 * @return void
+	 */
+	public function __get($prop) {
+		if (array_key_exists($prop, $this->properties)) {
+			return $this->properties[$prop];
+		} else {
+			throw new Exception("Property $prop does not exist");
+		}
+	}
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->before_action();
+
+		self::$instance = $this;
+
+		foreach (loaded_class() as $var => $class)
+		{
+			$this->properties[$var] =& load_class($class);
+		}
+
+		$this->call =& load_class('invoker', 'kernel');
+		$this->call->initialize();
+	}
+
+	/**
+     * Called before the controller action.
+     * Used to perform logic that needs to happen before each controller action.
+     *
+     */
+    public function before_action(){}
+
+	/**
+	 * Instance of controller
+	 *
+	 * @return object
+	 */
+	public static function &instance()
+	{
+		return self::$instance;
+	}
+
+}
 
 ?>

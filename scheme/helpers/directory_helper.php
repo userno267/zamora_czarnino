@@ -34,40 +34,68 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+if ( ! function_exists('directory_map'))
+{
+	/**
+	 * Get Directory and Files Path
+	 *
+	 * @param string $source_dir
+	 * @param integer $directory_depth
+	 * @param boolean $hidden
+	 * @return array
+	 */
+	function directory_map($source_dir, $directory_depth = 0, $hidden = FALSE)
+	{
+		if ($fp = @opendir($source_dir))
+		{
+			$filedata	= array();
+			$new_depth	= $directory_depth - 1;
+			$source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+			while (FALSE !== ($file = readdir($fp)))
+			{
+				if ($file === '.' OR $file === '..' OR ($hidden === FALSE && $file[0] === '.'))
+				{
+					continue;
+				}
 
-?>
+				is_dir($source_dir.$file) && $file .= DIRECTORY_SEPARATOR;
+
+				if (($directory_depth < 1 OR $new_depth > 0) && is_dir($source_dir.$file))
+				{
+					$filedata[$file] = directory_map($source_dir.$file, $new_depth, $hidden);
+				}
+				else
+				{
+					$filedata[] = $file;
+				}
+			}
+
+			closedir($fp);
+			return $filedata;
+		}
+
+		return FALSE;
+	}
+}
+
+if ( ! function_exists('is_dir_usable'))
+	{
+		/**
+		 * Check if directory is usable
+		 *
+		 * @param  string $dir
+		 * @param  string $chmod
+		 * @return boolean
+		 */
+		function is_dir_usable($dir, $chmod = '0744')
+		{
+			// If it doesn't exist, and can't be made
+			if(! is_dir($dir) AND ! mkdir($dir, $chmod, TRUE)) return FALSE;
+
+			// If it isn't writable, and can't be made writable
+			if(! is_writable($dir) AND !chmod($dir, $chmod)) return FALSE;
+
+			return TRUE;
+		}
+	}

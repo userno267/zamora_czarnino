@@ -34,40 +34,50 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+if ( ! function_exists('set_cookie'))
+{
+	/**
+	 * Setting up cookie in your application
+	 *
+	 * @param string $name the cookie name
+	 * @param string $value the cookie value
+	 * @param array $options other cookie options
+	 * @return void
+	 */
+	function set_cookie($name, $value = '', $expiration = 0, $options = array())
+	{
+		lava_instance()->io->set_cookie($name, $value, $expiration, $options);
+	}
+}
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+if ( ! function_exists('get_cookie'))
+{
+	/**
+	 * Fetch an item from the COOKIE array
+	 *
+	 * @param  string  $name name of the cookie
+	 * @return mixed
+	 */
+	function get_cookie($name)
+	{
+		$prefix = isset($_COOKIE[$name]) ? '' : config_item('cookie_prefix');
+		return lava_instance()->io->cookie($prefix.$name);
+	}
+}
 
-?>
+if ( ! function_exists('delete_cookie'))
+{
+	/**
+	 * Delete a cookie
+	 *
+	 * @param  string $name
+	 * @param  string $domain the cookie domain
+	 * @param  string $path   the cookie path
+	 * @param  string $prefix the cookie prefix
+	 * @return void
+	 */
+	function delete_cookie($name, $domain = '', $path = '/', $prefix = '')
+	{
+		lava_instance()->io->set_cookie($name, '', '', array('domain' => $domain, 'path' => $path, 'prefix' => $prefix));
+	}
+}

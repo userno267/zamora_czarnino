@@ -6,9 +6,9 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * ------------------------------------------------------------------
  *
  * MIT License
- *
+ * 
  * Copyright (c) 2020 Ronald M. Marasigan
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -34,40 +34,80 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-/*
-| -------------------------------------------------------------------
-| DATABASE CONNECTIVITY SETTINGS
-| -------------------------------------------------------------------
-| This file will contain the settings needed to access your database.
-| -------------------------------------------------------------------
-| EXPLANATION OF VARIABLES
-| -------------------------------------------------------------------
-|
-|	['driver'] 		The driver of your database server.
-|	['hostname'] 	The hostname of your database server.
-|	['port'] 		The port used by your database server.
-|	['username'] 	The username used to connect to the database
-|	['password'] 	The password used to connect to the database
-|	['database'] 	The name of the database you want to connect to
-|	['charset']		The default character set
-|   ['dbprefix']    You can add an optional prefix, which will be added
-|				    to the table name when using the  Query Builder class
-|   You can create new instance of the database by adding new element of
-|   $database variable.
-|   Example: $database['another_example'] = array('key' => 'value')
-*/
+/**
+* ------------------------------------------------------
+*  Class Performance
+* ------------------------------------------------------
+ */
+class Registry
+{
+    /**
+     * Class name arrays
+     *
+     * @var array
+     */
+	private $_classes = array();
 
-$database['main'] = array(
-    'driver' => 'mysql', 
-    'hostname' => 'localhost', 
-    'port' => '3306',
-     'username' => 'root', 
-     'password' => '',
-      'database' => 'mockdata', 
-      'charset' => 'utf8mb4', 
-      'dbprefix' => '',
-       // Optional for SQLite
-       'path' => ''
-);
+    /**
+     * Instance
+     *
+     * @var object
+     */
+	private static $_instance;
+	
+    /**
+     * Get Instance of Registry
+     */
+    public static function instance()
+    {
+    	if(!isset(self::$_instance))
+        {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 
-?>
+    /**
+     * Get
+     * @param string $key
+     * @return mixed
+     */
+    protected function get($key)
+    {
+    	
+        if(isset($this->_classes[$key]))
+        {	
+            return $this->_classes[$key];
+        }
+        return NULL;
+    }
+
+    /**
+     * @param string $key
+     * @param object $object
+     * @return void
+     */
+    protected function set($key, $object)
+    {
+        $this->_classes[$key] = $object;
+    }
+
+    /**
+     * @param string $key
+     * @return object
+     */
+    static function get_object($key)
+    {
+		return self::instance()->get($key);
+	}
+
+    /**
+     * @param string $key
+     * @param object $object
+     * @return object
+     */
+	static function store_object($key, $object)
+	{
+		return self::instance()->set($key, $object);
+	}
+}
