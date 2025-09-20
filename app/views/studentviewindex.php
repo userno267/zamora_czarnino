@@ -30,19 +30,19 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($students as $s): ?>
-                    <tr>
-                        <td><?= $s['id'] ?></td>
-                        <td><?= htmlspecialchars($s['firstname']) ?></td>
-                        <td><?= htmlspecialchars($s['lastname']) ?></td>
-                        <td><?= htmlspecialchars($s['email']) ?></td>
-                        <td>
-             <a href="/edit/<?= $s['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-<a href="/delete/<?= $s['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this student?')">Delete</a>
-
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+               <?php foreach ($students as $s): ?>
+    <tr>
+        <td><?= $s['id'] ?></td>
+        <td><?= htmlspecialchars($s['firstname']) ?></td>
+        <td><?= htmlspecialchars($s['lastname']) ?></td>
+        <td><?= htmlspecialchars($s['email']) ?></td>
+        <td>
+            <a href="/edit/<?= $s['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+            <a href="/delete/<?= $s['id'] ?>" class="btn btn-sm btn-danger"
+               onclick="return confirm('Delete this student?')">Delete</a>
+        </td>
+    </tr>
+<?php endforeach; ?>
             </tbody>
         </table>
     <?php else: ?>
