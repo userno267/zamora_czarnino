@@ -6,13 +6,14 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * 
  * Automatically generated via CLI.
  */
+
 class StudentsController extends Controller {
-    public function __construct() {
+public function __construct() {
         parent::__construct();
         $this->call->model('StudentsModel');
         $this->call->database();
+        $this->call->library('pagination'); // ✅ load pagination library
     }
-
 public function index() 
 {
     $page = 1;
