@@ -19,8 +19,6 @@
     <button type="submit" class="btn btn-outline-secondary">Search</button>
 </form>
 
-    <a href="/students/create" class="btn btn-primary mb-3">Add Student</a>
-
     <?php if (!empty($students)): ?>
         <table class="table table-bordered">
             <thead>
