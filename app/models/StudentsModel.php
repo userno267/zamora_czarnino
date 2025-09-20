@@ -33,10 +33,9 @@ class StudentsModel extends Model {
 
     $result = $builder->get_all();
 
-    // Debugging output (remove after testing)
+    // Debugging output (safe for LavaLust)
     echo "<pre>";
     echo "Keyword: " . htmlspecialchars($keyword) . "\n";
-    echo "SQL: " . $builder->last_query() . "\n";
     echo "Results: " . count($result) . "\n";
     print_r($result);
     echo "</pre>";
