@@ -14,4 +14,22 @@ class StudentsModel extends Model {
     {
         parent::__construct();
     }
+
+    // Override with proper signature
+    public function all($with_deleted = false)
+    {
+        return $this->db->table($this->table)
+                        ->order_by($this->primary_key, 'DESC')
+                        ->get_all();
+    }
+
+    public function search($keyword)
+    {
+        return $this->db->table($this->table)
+                        ->like('firstname', $keyword)
+                        ->or_like('lastname', $keyword)
+                        ->or_like('email', $keyword)
+                        ->order_by($this->primary_key, 'DESC')
+                        ->get_all();
+    }
 }
