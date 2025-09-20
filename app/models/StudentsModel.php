@@ -23,13 +23,25 @@ class StudentsModel extends Model {
                         ->get_all();
     }
 
-    public function search($keyword)
-    {
-        return $this->db->table($this->table)
+   public function search($keyword)
+{
+    $builder = $this->db->table($this->table)
                         ->like('firstname', $keyword)
                         ->or_like('lastname', $keyword)
                         ->or_like('email', $keyword)
-                        ->order_by($this->primary_key, 'DESC')
-                        ->get_all();
-    }
+                        ->order_by($this->primary_key, 'DESC');
+
+    $result = $builder->get_all();
+
+    // Debugging output (remove after testing)
+    echo "<pre>";
+    echo "Keyword: " . htmlspecialchars($keyword) . "\n";
+    echo "SQL: " . $builder->last_query() . "\n";
+    echo "Results: " . count($result) . "\n";
+    print_r($result);
+    echo "</pre>";
+    exit;
+
+    return $result;
+}
 }
