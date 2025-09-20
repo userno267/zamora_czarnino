@@ -8,7 +8,15 @@
 </head>
 <body class="container py-4">
     <h1 class="mb-3">Students</h1>
-    <a href="/students/create" class="btn btn-primary mb-3">Add Student</a>
+<a href="/students/create" class="btn btn-primary mb-3">Add Student</a>
+
+<form method="get" action="/students" class="mb-3 d-flex">
+    <input type="text" name="q" class="form-control me-2"
+           placeholder="Search students..."
+           value="<?= htmlspecialchars($search ?? '') ?>">
+    <button type="submit" class="btn btn-outline-secondary">Search</button>
+</form>
+
 
     <?php if (!empty($students)): ?>
         <table class="table table-bordered">
