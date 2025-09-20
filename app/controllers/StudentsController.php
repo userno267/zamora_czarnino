@@ -13,20 +13,41 @@ class StudentsController extends Controller {
         $this->call->database();
     }
 
-public function index() {
-    $q = $_GET['q'] ?? null;
-
-    if ($q) {
-        $students = $this->StudentsModel->search($q);
-    } else {
-        $students = $this->StudentsModel->all();
+public function index() 
+{
+    $page = 1;
+    if (isset($_GET['page']) && !empty($_GET['page'])) {
+        $page = $this->io->get('page'); // LavaLust input helper
     }
 
-    $this->call->view('studentviewindex', [
-        'students' => $students,
-        'search'   => $q
+    $q = '';
+    if (isset($_GET['q']) && !empty($_GET['q'])) {
+        $q = trim($this->io->get('q'));
+    }
+
+    $records_per_page = 5; // adjust as you like
+
+    $all = $this->StudentsModel->page($q, $records_per_page, $page);
+    $data['students'] = $all['records'];
+    $total_rows = $all['total_rows'];
+
+    // Configure pagination
+    $this->pagination->set_options([
+        'first_link'     => '⏮ First',
+        'last_link'      => 'Last ⏭',
+        'next_link'      => 'Next →',
+        'prev_link'      => '← Prev',
+        'page_delimiter' => '&page='
     ]);
+    $this->pagination->set_theme('bootstrap'); // "tailwind" also supported
+    $this->pagination->initialize($total_rows, $records_per_page, $page, site_url('students').'?q='.$q);
+
+    $data['page'] = $this->pagination->paginate();
+    $data['search'] = $q;
+
+    $this->call->view('studentviewindex', $data);
 }
+
 
     public function create() {
         $this->call->view('form', [
