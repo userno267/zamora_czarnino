@@ -13,10 +13,22 @@ class StudentsController extends Controller {
         $this->call->database();
     }
 
-    public function index() {
+ public function index() {
+    var_dump($q, $students);
+exit;
+    $q = $_GET['q'] ?? null;
+
+    if ($q) {
+        $students = $this->StudentsModel->search($q);
+    } else {
         $students = $this->StudentsModel->all();
-        $this->call->view('studentviewindex', ['students' => $students]);
     }
+
+    $this->call->view('studentviewindex', [
+        'students' => $students,
+        'search'   => $q
+    ]);
+}
 
     public function create() {
         $this->call->view('form', [
