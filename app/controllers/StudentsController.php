@@ -14,8 +14,7 @@ class StudentsController extends Controller {
     }
 
  public function index() {
-    var_dump($q, $students);
-exit;
+    
     $q = $_GET['q'] ?? null;
 
     if ($q) {
@@ -28,6 +27,9 @@ exit;
         'students' => $students,
         'search'   => $q
     ]);
+
+    var_dump($q, $students);
+exit;
 }
 
     public function create() {
