@@ -10,7 +10,7 @@
     <h1 class="mb-3">Students</h1>
 <a href="/students/create" class="btn btn-primary mb-3">Add Student</a>
 
-<form method="get" action="/students" class="mb-3 d-flex">
+<form method="get" action="" class="mb-3 d-flex">
     <input type="text" name="q" class="form-control me-2"
            placeholder="Search students..."
            value="<?= htmlspecialchars($search ?? '') ?>">

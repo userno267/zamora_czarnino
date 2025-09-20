@@ -13,8 +13,7 @@ class StudentsController extends Controller {
         $this->call->database();
     }
 
- public function index() {
-    
+public function index() {
     $q = $_GET['q'] ?? null;
 
     if ($q) {
@@ -27,9 +26,6 @@ class StudentsController extends Controller {
         'students' => $students,
         'search'   => $q
     ]);
-
-    var_dump($q, $students);
-exit;
 }
 
     public function create() {
