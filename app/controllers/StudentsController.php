@@ -13,11 +13,11 @@ class StudentsController extends Controller {
         $this->call->database();
     }
 
- public function index() {
+public function index() {
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $q = $_GET['q'] ?? '';
 
-    $records_per_page = 5; // or 10, your choice
+    $records_per_page = 5;
 
     $all = $this->StudentsModel->paginate_with_search($q, $records_per_page, $page);
 
@@ -31,13 +31,13 @@ class StudentsController extends Controller {
         'prev_link'  => '← Prev',
         'page_delimiter' => '&page=',
     ]);
-    $this->pagination->set_theme('bootstrap'); // or 'tailwind'
+    $this->pagination->set_theme('bootstrap');
 
     $this->pagination->initialize(
         $total_rows,
         $records_per_page,
         $page,
-        site_url('students').'?q='.$q
+        base_url('students') . '?q=' . urlencode($q)
     );
 
     $this->call->view('studentviewindex', [
@@ -46,7 +46,6 @@ class StudentsController extends Controller {
         'page'     => $this->pagination->paginate()
     ]);
 }
-
     public function create() {
         $this->call->view('form', [
             'mode' => 'create',
