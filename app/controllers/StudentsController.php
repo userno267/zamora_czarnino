@@ -15,9 +15,13 @@ class StudentsController extends Controller {
 
 
     public function index() {
-        $page = $this->io->get('page') ?? 1;
-        $q    = trim($this->io->get('q') ?? '');
+        $page = $this->io->get('page');
+if (empty($page) || !is_numeric($page) || $page < 1) {
+    $page = 1;
+}
 
+$q = $this->io->get('q');
+$q = $q !== null ? trim($q) : '';
         $records_per_page = 5; // adjust to 10, 20, etc.
 
         $all = $this->StudentsModel->page($q, $records_per_page, $page);
