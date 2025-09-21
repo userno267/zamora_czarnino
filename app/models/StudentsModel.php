@@ -22,21 +22,25 @@ class StudentsModel extends Model {
                         ->order_by($this->primary_key, 'DESC')
                         ->get_all();
     }
+public function paginate_with_search($q, $records_per_page, $page)
+    {
+        $query = $this->db->table($this->table);
 
-   public function search($keyword)
-{
-    $builder = $this->db->table($this->table)
-                        ->like('firstname', $keyword)
-                        ->or_like('lastname', $keyword)
-                        ->or_like('email', $keyword)
-                        ->order_by($this->primary_key, 'DESC');
+        if (!empty($q)) {
+            $query->like('firstname', $q)
+                  ->or_like('lastname', $q)
+                  ->or_like('email', $q);
+        }
 
-    $result = $builder->get_all();
+        // Clone before applying pagination
+        $countQuery = clone $query;
+        $data['total_rows'] = $countQuery->select_count('*', 'count')->get()['count'];
 
-    // Debugging output (safe for LavaLust)
-   
-    return $result;
-}
+        $data['records'] = $query->order_by($this->primary_key, 'DESC')
+                                 ->pagination($records_per_page, $page)
+                                 ->get_all();
 
+        return $data;
+    }
 
 }

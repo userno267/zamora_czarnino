@@ -16,37 +16,40 @@
            value="<?= htmlspecialchars($search ?? '') ?>">
     <button type="submit" class="btn btn-outline-secondary">Search</button>
 </form>
-
-
-    <?php if (!empty($students)): ?>
-        <table class="table table-bordered">
-            <thead>
+<?php if (!empty($students)): ?>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($students as $s): ?>
                 <tr>
-                    <th>#</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <td><?= $s['id'] ?></td>
+                    <td><?= htmlspecialchars($s['firstname']) ?></td>
+                    <td><?= htmlspecialchars($s['lastname']) ?></td>
+                    <td><?= htmlspecialchars($s['email']) ?></td>
+                    <td>
+                        <a href="/edit/<?= $s['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="/delete/<?= $s['id'] ?>" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this student?')">Delete</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-               <?php foreach ($students as $s): ?>
-    <tr>
-        <td><?= $s['id'] ?></td>
-        <td><?= htmlspecialchars($s['firstname']) ?></td>
-        <td><?= htmlspecialchars($s['lastname']) ?></td>
-        <td><?= htmlspecialchars($s['email']) ?></td>
-        <td>
-            <a href="/edit/<?= $s['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-            <a href="/delete/<?= $s['id'] ?>" class="btn btn-sm btn-danger"
-               onclick="return confirm('Delete this student?')">Delete</a>
-        </td>
-    </tr>
-<?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p class="text-muted">No students found.</p>
-    <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- Pagination Links -->
+    <div class="mt-3">
+        <?= $page ?>
+    </div>
+<?php else: ?>
+    <p class="text-muted">No students found.</p>
+<?php endif; ?>
 </body>
 </html>

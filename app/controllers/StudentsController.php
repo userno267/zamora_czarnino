@@ -14,21 +14,37 @@ class StudentsController extends Controller {
     }
 
  public function index() {
-    
-    $q = $_GET['q'] ?? null;
+    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    $q = $_GET['q'] ?? '';
 
-    if ($q) {
-        $students = $this->StudentsModel->search($q);
-    } else {
-        $students = $this->StudentsModel->all();
-    }
+    $records_per_page = 5; // or 10, your choice
+
+    $all = $this->StudentsModel->paginate_with_search($q, $records_per_page, $page);
+
+    $students = $all['records'];
+    $total_rows = $all['total_rows'];
+
+    $this->pagination->set_options([
+        'first_link' => '⏮ First',
+        'last_link'  => 'Last ⏭',
+        'next_link'  => 'Next →',
+        'prev_link'  => '← Prev',
+        'page_delimiter' => '&page=',
+    ]);
+    $this->pagination->set_theme('bootstrap'); // or 'tailwind'
+
+    $this->pagination->initialize(
+        $total_rows,
+        $records_per_page,
+        $page,
+        site_url('students').'?q='.$q
+    );
 
     $this->call->view('studentviewindex', [
         'students' => $students,
-        'search'   => $q
+        'search'   => $q,
+        'page'     => $this->pagination->paginate()
     ]);
-
-
 }
 
     public function create() {
