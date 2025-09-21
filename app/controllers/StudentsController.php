@@ -28,8 +28,7 @@ class StudentsController extends Controller {
         'search'   => $q
     ]);
 
-    var_dump($q, $students);
-exit;
+
 }
 
     public function create() {
