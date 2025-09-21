@@ -34,11 +34,11 @@ public function index() {
     $this->pagination->set_theme('bootstrap');
 
     $this->pagination->initialize(
-        $total_rows,
-        $records_per_page,
-        $page,
-        base_url('students') . '?q=' . urlencode($q)
-    );
+    $total_rows,
+    $records_per_page,
+    $page,
+    '/students?q=' . urlencode($q)
+);
 
     $this->call->view('studentviewindex', [
         'students' => $students,
