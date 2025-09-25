@@ -32,12 +32,12 @@ public function index() {
     ]);
     $this->pagination->set_theme('bootstrap');
 
-    $this->pagination->initialize(
-        $total_rows,
-        $records_per_page,
-        $page,
-        site_url('students').'?q='.$q
-    );
+   $this->pagination->initialize(
+    $total_rows,
+    $records_per_page,
+    $page,
+    '/students?q='.$q
+);
 
     $this->call->view('studentviewindex', [
         'students' => $students,
