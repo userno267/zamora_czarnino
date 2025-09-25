@@ -12,7 +12,6 @@ class StudentsController extends Controller {
         $this->call->model('StudentsModel');
         $this->call->database();
     }
-
 public function index() {
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $q = $_GET['q'] ?? '';
@@ -34,18 +33,21 @@ public function index() {
     $this->pagination->set_theme('bootstrap');
 
     $this->pagination->initialize(
-    $total_rows,
-    $records_per_page,
-    $page,
-    '/students?q=' . urlencode($q)
-);
+        $total_rows,
+        $records_per_page,
+        $page,
+        site_url('students').'?q='.$q
+    );
 
     $this->call->view('studentviewindex', [
         'students' => $students,
         'search'   => $q,
-        'page'     => $this->pagination->paginate()
+        'page'     => $this->pagination->paginate(),
+        'role'     => $this->session->userdata('role') // pass role to view
     ]);
 }
+
+
     public function create() {
         $this->call->view('form', [
             'mode' => 'create',
